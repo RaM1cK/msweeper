@@ -92,7 +92,8 @@ function showHelp() {
             <li><b>Long Press:</b> Open a cell.</li>
             <li><b>Short Press:</b> Place or remove a flag.</li>` : `
             <li><b>Left Click:</b> Open a cell.</li>
-            <li><b>Right Click:</b> Place or remove a flag.</li>`;
+            <li><b>Right Click or F Key:</b> Place or remove a flag.</li>
+            <li><b>R Key:</b> Restart.</li>`;
 
     helpContent.innerHTML = `
         <ul style="padding-left: 0; list-style-type: none; margin-top: 5px; line-height: 1.6;">
@@ -100,14 +101,13 @@ function showHelp() {
             <li><b>Click a Number:</b> If the correct amount of flags surround the number, it instantly opens the remaining adjacent cells.</li>
         </ul>
         <hr style="border-color: var(--border-dark); margin: 8px 0;">
+        <h3>UI Navigation</h3>
         <div style="font-size: 12px; line-height: 1.6;">
-            <b>Game:</b> Beginner / Intermediate / Expert / Custom<br>
-            <b>Theme:</b> Classic / Dark / Neon / Forest — in menu bar<br>
-            <b>Stats:</b> Per-difficulty win rate, best time, streaks<br>
+            <b>Difficulty:</b> Beginner / Intermediate / Expert / Custom<br>
+            <b>Themes:</b> Classic / Dark / Neon / Forest<br>
+            <b>Statistics:</b> Per-Difficulty win rate / Best time / Win streak<br>
             <b>Achievements:</b> 12 achievements with popup notifications<br>
-            <b>Result:</b> Summary shown after each game<br>
-            <b>Keyboard:</b> <kbd>R</kbd> restart · <kbd>F</kbd> flag<br>
-            <b>Effects:</b> Confetti on win, explosion on loss
+            <b>Result:</b> Summary is shown at the end of each game<br>
         </div>
     `;
     document.getElementById('helpModal').style.display = 'block';
