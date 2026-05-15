@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minesweeper Web</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div class="app-container" id="app-container">
+        <div class="menu-bar">
+            <div class="menu-item">
+                Game
+                <div class="dropdown">
+                    <div onclick="initGame(9, 9, 10)">Beginner (9x9)</div>
+                    <div onclick="initGame(16, 16, 40)">Intermediate (16x16)</div>
+                    <div onclick="initGame(30, 16, 99)">Expert (30x16)</div>
+                    <div class="separator"></div>
+                    <div onclick="openCustomModal()">Custom...</div>
+                    <div class="separator"></div>
+                    <div onclick="initGame(width, height, totalMines)">Restart</div>
+                </div>
+            </div>
+            <div class="menu-item">
+                Theme
+                <div class="dropdown" id="theme-dropdown">
+                    <div onclick="setTheme('classic')"><span class="theme-dot" style="background:#008080;"></span>Classic</div>
+                    <div onclick="setTheme('dark')"><span class="theme-dot" style="background:#1a1a2e;"></span>Dark Mode</div>
+                    <div onclick="setTheme('neon')"><span class="theme-dot" style="background:#0a0a1a;border-color:#ff00ff;"></span>Neon</div>
+                    <div onclick="setTheme('forest')"><span class="theme-dot" style="background:#1a3a1a;"></span>Forest</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="showStats()">Stats</div>
+            <div class="menu-item" onclick="showAchievements()">Achievements</div>
+            <div class="menu-item" onclick="showHelp()">Help</div>
+        </div>
+
+        <div id="customModal" class="modal">
+            <h3>Custom Game</h3>
+            <div class="modal-inputs">
+                <label>Width:</label> <input type="number" id="c_width" min="8" max="64" value="20">
+                <label>Height:</label> <input type="number" id="c_height" min="8" max="64" value="20">
+                <label>Mines:</label> <input type="number" id="c_mines" min="1" max="1024" value="50">
+            </div>
+            <button class="modal-btn" onclick="applyCustom()">Start</button>
+            <button class="modal-btn" onclick="closeCustomModal()" style="margin-top:5px;">Cancel</button>
+        </div>
+
+        <div id="statsModal" class="modal">
+            <h3>Statistics</h3>
+            <div id="statsContent" style="margin-bottom: 15px; font-size: 13px; min-width: 280px;"></div>
+            <button class="modal-btn" onclick="resetStats()" style="margin-bottom:5px;">Reset Stats</button>
+            <button class="modal-btn" onclick="document.getElementById('statsModal').style.display='none'">Close</button>
+        </div>
+
+        <div id="helpModal" class="modal">
+            <h3>How to Play</h3>
+            <div id="helpContent" style="margin-bottom: 15px; font-size: 13px; max-width: 220px; line-height: 1.4;"></div>
+            <button class="modal-btn" onclick="document.getElementById('helpModal').style.display='none'">Close</button>
+        </div>
+
+        <div id="resultModal" class="modal">
+            <h3 id="resultTitle">Game Over</h3>
+            <div id="resultContent" style="margin-bottom: 15px; font-size: 13px; min-width: 240px;"></div>
+            <button class="modal-btn" onclick="document.getElementById('resultModal').style.display='none'">OK</button>
+        </div>
+
+        <div id="achModal" class="modal">
+            <h3>Achievements</h3>
+            <div id="achContent" style="margin-bottom: 15px; font-size: 13px; min-width: 280px; max-height: 60vh; overflow-y: auto;"></div>
+            <button class="modal-btn" onclick="document.getElementById('achModal').style.display='none'">Close</button>
+        </div>
+
+        <div id="ach-toast" class="ach-toast">
+            <span class="ach-toast-icon"></span>
+            <div class="ach-toast-body">
+                <div class="ach-toast-name"></div>
+                <div class="ach-toast-desc"></div>
+            </div>
+        </div>
+
+        <div class="minesweeper-frame" id="game-frame">
+            <div class="corner-tl"></div><div class="border-t"></div><div class="corner-tr"></div>
+            
+            <div class="header-l"></div>
+            <div class="header-m">
+                <div class="num-bg" id="mines-counter"></div>
+                <div class="face" id="face" data-state="unpressed"></div>
+                <div class="num-bg" id="time-counter"></div>
+            </div>
+            <div class="header-r"></div>
+            
+            <div class="t-left"></div><div class="border-m"></div><div class="t-right"></div>
+            
+            <div class="board-l"></div>
+            <div class="board-m" id="board"></div>
+            <div class="board-r"></div>
+            
+            <div class="corner-bl"></div><div class="border-b"></div><div class="corner-br"></div>
+        </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+    <div id="flash-overlay"></div>
+
+    <script src="state.js"></script>
+    <script src="game.js"></script>
+    <script src="data.js"></script>
+    <script src="ui.js"></script>
+    <script src="effects.js"></script>
+    <script src="input.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
