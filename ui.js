@@ -98,9 +98,8 @@ function showHelp() {
     helpContent.innerHTML = `
         <ul style="padding-left: 0; list-style-type: none; margin-top: 5px; line-height: 1.6;">
             ${basics}
-            <li><b>Click a Number:</b> If the correct amount of flags surround the number, it instantly opens the remaining adjacent cells.</li>
+            <li><b>Press a Number:</b> If the correct amount of flags surround the number, it instantly opens the remaining adjacent cells.</li>
         </ul>
-        <hr style="border-color: var(--border-dark); margin: 8px 0;">
         <h3>UI Navigation</h3>
         <div style="font-size: 12px; line-height: 1.6;">
             <b>Difficulty:</b> Beginner / Intermediate / Expert / Custom<br>
