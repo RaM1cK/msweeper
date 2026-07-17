@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minesweeper Web — Login</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="auth-page">
+
+    <div class="auth-container">
+        <div class="auth-titlebar">
+            <div class="auth-titlebar-icon">
+                <img src="/assets/cell_mine.svg" alt="" width="14" height="14">
+            </div>
+            <span class="auth-titlebar-text">Minesweeper Web</span>
+        </div>
+
+        <div class="auth-body">
+            <div class="auth-logo-area">
+                <div class="auth-logo-border">
+                    <img src="/assets/face.png" alt="Minesweeper" class="auth-logo-img">
+                </div>
+                <div class="auth-logo-label">Welcome, Player!</div>
+            </div>
+
+            <div class="auth-separator">
+                <span class="auth-sep-line"></span>
+                <span class="auth-sep-text">⚙</span>
+                <span class="auth-sep-line"></span>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+                <div class="auth-field">
+                    <label for="login-username">Username</label>
+                    <div class="auth-input-wrap">
+                        <input type="text" id="login-username" autocomplete="username" required>
+                    </div>
+                </div>
+                <div class="auth-field">
+                    <label for="login-password">Password</label>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="login-password" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <div class="auth-error" id="loginError"></div>
+                <button type="submit" class="auth-btn auth-btn-primary">Sign In</button>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <div class="auth-field">
+                    <label for="reg-username">Username</label>
+                    <div class="auth-input-wrap">
+                        <input type="text" id="reg-username" autocomplete="username" required>
+                    </div>
+                </div>
+                <div class="auth-field">
+                    <label for="reg-password">Password</label>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="reg-password" autocomplete="new-password" required>
+                    </div>
+                </div>
+                <div class="auth-field">
+                    <label for="reg-confirm">Confirm Password</label>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="reg-confirm" autocomplete="new-password" required>
+                    </div>
+                </div>
+                <div class="auth-error" id="registerError"></div>
+                <button type="submit" class="auth-btn auth-btn-primary">Create Account</button>
+            </form>
+
+            <div class="auth-separator auth-separator-sm">
+                <span class="auth-sep-line"></span>
+                <span class="auth-sep-text">💣</span>
+                <span class="auth-sep-line"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.auth-tab');
+        const forms = document.querySelectorAll('.auth-form');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                forms.forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + 'Form').classList.add('active');
+                clearErrors();
+            });
+        });
+
+        function clearErrors() {
+            document.querySelectorAll('.auth-error').forEach(e => {
+                e.textContent = '';
+                e.classList.remove('auth-error-show');
+            });
+        }
+
+        function setError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('auth-error-show');
+            el.classList.remove('error-blink');
+            void el.offsetWidth;
+            el.classList.add('error-blink');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            if (!username || !password) {
+                setError('loginError', 'Please fill in all fields.');
+                return;
+            }
+            fetch('http://localhost:3000/user/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({username, password})
+            })
+                .then(async res => {
+                    const data = await res.json();
+
+                    if (res.ok) window.location.href = data.redirect;
+                    else setError('loginError', data.message);
+                })
+                .catch(() => setError('loginError', 'Login failed.'));
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+
+            if (!username || !password || !confirm) {
+                setError('registerError', 'Please fill in all fields.');
+                return;
+            }
+            if (password.length < 6) {
+                setError('registerError', 'Password must be at least 6 characters.');
+                return;
+            }
+            if (password !== confirm) {
+                setError('registerError', 'Passwords do not match.');
+                return;
+            }
+
+            fetch('http://localhost:3000/user/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({username, password})
+            })
+                .then(async res => {
+                    const data = await res.json();
+
+                    if (res.ok) window.location.href = data.redirect;
+                    else setError('loginError', data.message);
+                })
+                .catch(() => setError('registerError', 'Registration failed'));
+        });
+    </script>
+</body>
+</html>

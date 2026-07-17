@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-
     <div class="app-container" id="app-container">
         <div class="menu-bar">
             <div class="menu-item">
@@ -51,6 +50,7 @@
             <h3>Statistics</h3>
             <div id="statsContent" style="margin-bottom: 15px; font-size: 13px; min-width: 280px;"></div>
             <button class="modal-btn" onclick="resetStats()" style="margin-bottom:5px;">Reset Stats</button>
+            <button class="modal-btn" onclick="resetAllStats()" style="margin-bottom:5px;">Reset all Stats</button>
             <button class="modal-btn" onclick="document.getElementById('statsModal').style.display='none'">Close</button>
         </div>
 
@@ -104,12 +104,12 @@
     <canvas id="confetti-canvas"></canvas>
     <div id="flash-overlay"></div>
 
-    <script src="state.js"></script>
-    <script src="game.js"></script>
-    <script src="data.js"></script>
-    <script src="ui.js"></script>
-    <script src="effects.js"></script>
-    <script src="input.js"></script>
-    <script src="main.js"></script>
+    <script src="scripts/state.js"></script>
+    <script src="scripts/game.js"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/effects.js"></script>
+    <script src="scripts/input.js"></script>
+    <script src="scripts/main.js"></script>
 </body>
 </html>
