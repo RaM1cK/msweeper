@@ -1,0 +1,36 @@
+{
+  "name": "msweeper",
+  "version": "1.0.0",
+  "description": "server application",
+  "homepage": "https://github.com/RaM1cK/msweeper#readme",
+  "bugs": {
+    "url": "https://github.com/RaM1cK/msweeper/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaM1cK/msweeper.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.42",
+    "@sequelize/postgres": "^7.0.0-alpha.48",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.0",
+    "jsonwebtoken": "^9.0.3",
+    "rate-limiter-flexible": "^11.2.0",
+    "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
