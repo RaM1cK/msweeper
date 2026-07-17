@@ -7,6 +7,8 @@ let startTime = 0, gameTimerInterval = null, currentTime = 0;
 let gameResult = null;
 let cellsRevealedInOneClick = 0;
 let noFlagsUsed = true;
+let stats = null;
+let achievements = null;
 
 let touchTimer = null, touchMoved = false, touchTarget = null;
 let isLeftMouseDown = false;
@@ -42,5 +44,5 @@ const ACHIEVEMENTS = [
 
 function getDifficultyKey(w, h, m) {
     const k = `${w},${h},${m}`;
-    return DIFFICULTY_KEY[k] || `custom_${k}`;
+    return DIFFICULTY_KEY[k] || `custom`;
 }

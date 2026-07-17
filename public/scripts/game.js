@@ -90,6 +90,7 @@ function generateMines(firstX, firstY) {
     gameTimerInterval = setInterval(() => {
         if (!gameOver) {
             currentTime = Math.floor((Date.now() - startTime) / 1000);
+
             updateDigits(currentTime, 'time-counter');
         }
     }, 1000);
@@ -263,7 +264,7 @@ function processGameOver(isWin) {
     clearInterval(gameTimerInterval);
     setFace(isWin ? 'win' : 'lose');
 
-    const finalTime = currentTime;
+    const finalTime = parseFloat(((Date.now() - startTime) / 1000).toFixed(2));
     const diffKey = getDifficultyKey(width, height, totalMines);
     recordGame(diffKey, isWin, finalTime);
     checkAchievements(isWin, finalTime);

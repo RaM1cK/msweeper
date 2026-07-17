@@ -1,18 +1,37 @@
+let achSaveTimer = null;
+
 /* --- Stats --- */
-function loadStats() {
-    try {
-        const raw = localStorage.getItem('msweeper_stats');
-        return raw ? JSON.parse(raw) : {};
-    } catch {
-        return {};
+async function loadStats() {
+    if (!stats) {
+        try {
+            const res = await fetch('http://localhost:3000/stats', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            stats = await res.json();
+        } catch (err) {
+            console.log(err);
+
+            stats = {};
+        }
     }
+
+    return stats;
 }
 
-function saveStats(stats) {
-    try {
-        localStorage.setItem('msweeper_stats', JSON.stringify(stats));
-    } catch {
-    }
+function saveStats(data) {
+    stats = data;
+
+    fetch('http://localhost:3000/stats', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    }).catch(err => console.error(err));
 }
 
 function ensureStatsEntry(stats, key) {
@@ -22,8 +41,8 @@ function ensureStatsEntry(stats, key) {
     return stats[key];
 }
 
-function recordGame(diffKey, won, time) {
-    const stats = loadStats();
+async function recordGame(diffKey, won, time) {
+    const stats = await loadStats();
     const entry = ensureStatsEntry(stats, diffKey);
     entry.played++;
     if (won) {
@@ -49,30 +68,49 @@ function recordGame(diffKey, won, time) {
 }
 
 /* --- Achievements --- */
-function loadAchievements() {
-    try {
-        const raw = localStorage.getItem('msweeper_achievements');
-        return raw ? JSON.parse(raw) : {};
-    } catch { return {}; }
+async function loadAchievements() {
+    if (!achievements) {
+        try {
+            const res = await fetch('http://localhost:3000/stats/achievements', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            achievements = await res.json();
+        } catch (err) {
+            console.log(err);
+
+            achievements = {};
+        }
+    }
+
+    return achievements;
 }
 
 function saveAchievements(achs) {
-    try {
-        localStorage.setItem('msweeper_achievements', JSON.stringify(achs));
-    } catch {}
+    achievements = achs;
+    scheduleAchievementSave();
 }
 
-function isAchievementUnlocked(id) {
-    const achs = loadAchievements();
+function scheduleAchievementSave() {
+    if (achSaveTimer) clearTimeout(achSaveTimer);
+    achSaveTimer = setTimeout(() => {
+        achSaveTimer = null;
+        fetch('http://localhost:3000/stats/achievements', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(achievements)
+        }).catch(err => console.error(err));
+    }, 400);
+}
+
+async function isAchievementUnlocked(id) {
+    const achs = await loadAchievements();
     return !!achs[id];
-}
-
-function unlockAchievement(id) {
-    if (isAchievementUnlocked(id)) return false;
-    const achs = loadAchievements();
-    achs[id] = Date.now();
-    saveAchievements(achs);
-    return true;
 }
 
 function showAchievementNotification(achievement) {
@@ -84,16 +122,23 @@ function showAchievementNotification(achievement) {
     setTimeout(() => toast.classList.remove('show'), 4000);
 }
 
-function tryUnlockAndNotify(id) {
+async function tryUnlockAndNotify(id) {
+    const unlocked = await isAchievementUnlocked(id);
+
+    if (unlocked) return;
+
     const ach = ACHIEVEMENTS.find(a => a.id === id);
     if (!ach) return;
-    if (unlockAchievement(id)) {
-        setTimeout(() => showAchievementNotification(ach), 600);
-    }
+
+    const achs = await loadAchievements();
+    achs[id] = Date.now();
+    saveAchievements(achs);
+
+    setTimeout(() => showAchievementNotification(ach), 600);
 }
 
-function checkAchievements(won, time) {
-    const stats = loadStats();
+async function checkAchievements(won, time) {
+    const stats = await loadStats();
     const overall = stats._overall || { played: 0, won: 0, currentStreak: 0 };
     const totalPlayed = overall.played || 0;
     const currentStreak = overall.currentStreak || 0;

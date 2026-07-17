@@ -5,16 +5,16 @@ function closeAllModals() {
 }
 
 /* --- Stats UI --- */
-function showStats() {
+async function showStats() {
     closeAllModals();
-    const stats = loadStats();
+    const stats = await loadStats();
     const diffKey = getDifficultyKey(width, height, totalMines);
-    const curr = stats[diffKey] || {played: 0, won: 0, bestTime: null, currentStreak: 0, bestStreak: 0};
-    const overall = stats['_overall'] || {played: 0, won: 0, currentStreak: 0, bestStreak: 0};
+    const curr = stats?.[diffKey] || {played: 0, won: 0, bestTime: null, currentStreak: 0, bestStreak: 0};
+    const overall = stats?.['_overall'] || {played: 0, won: 0, currentStreak: 0, bestStreak: 0};
     const winRate = curr.played > 0 ? Math.round(curr.won / curr.played * 100) : 0;
     const overallWinRate = overall.played > 0 ? Math.round(overall.won / overall.played * 100) : 0;
 
-    const diffLabel = DIFFICULTY_KEY[`${width},${height},${totalMines}`] || 'Custom';
+    const diffLabel = diffKey || 'Custom';
 
     document.getElementById('statsContent').innerHTML = `
         <div class="stats-grid">
@@ -45,21 +45,29 @@ function showStats() {
     document.getElementById('statsModal').style.display = 'block';
 }
 
-function resetStats() {
+async function resetStats() {
     const diffKey = getDifficultyKey(width, height, totalMines);
     const diffLabel = DIFFICULTY_KEY[`${width},${height},${totalMines}`] || 'Custom';
     if (confirm(`Reset statistics for ${diffLabel}?`)) {
-        const stats = loadStats();
+        const stats = await loadStats();
         delete stats[diffKey];
         saveStats(stats);
         document.getElementById('statsModal').style.display = 'none';
     }
 }
 
+function resetAllStats() {
+    if (confirm('Reset all statistics?')) {
+        stats = null;
+        saveStats({});
+        document.getElementById('statsModal').style.display = 'none';
+    }
+}
+
 /* --- Achievements UI --- */
-function showAchievements() {
+async function showAchievements() {
     closeAllModals();
-    const achs = loadAchievements();
+    const achs = await loadAchievements();
     const html = ACHIEVEMENTS.map(a => {
         const unlocked = !!achs[a.id];
         return `<div class="ach-item ${unlocked ? 'ach-unlocked' : 'ach-locked'}">
@@ -74,7 +82,11 @@ function showAchievements() {
 
     const unlocked = Object.keys(achs).length;
     document.getElementById('achContent').innerHTML = `
-        <div style="text-align:center;margin-bottom:10px;font-size:13px;opacity:0.7;">
+        <div style="text-align: center;
+            margin-bottom: 10px;
+            font-size:13px;
+            opacity:0.7;"
+        >
             ${unlocked} / ${ACHIEVEMENTS.length} unlocked
         </div>
         ${html}
@@ -180,7 +192,7 @@ function updateDigits(value, containerId) {
     for (let i = 0; i < 3; i++) {
         let digit = document.createElement('div');
         digit.className = 'digit';
-        digit.style.backgroundImage = `url('assets/number_${valStr[i]}.svg')`;
+        digit.style.backgroundImage = `url('./assets/number_${valStr[i]}.svg')`;
         container.appendChild(digit);
     }
 }
