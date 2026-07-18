@@ -26,6 +26,6 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     @HasMany(() => UserAchievement, 'userId')
     declare achievements: NonAttribute<UserAchievement[]>;
 
-    @HasOne(() => UserStats, 'userId')
+    @HasMany(() => UserStats, 'userId')
     declare stats: NonAttribute<UserStats>;
 }

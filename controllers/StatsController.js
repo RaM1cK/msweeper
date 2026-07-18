@@ -71,3 +71,17 @@ export const getAchievement = async (req, res) => {
     return res.status(200).json(data);
 }
 
+export const resetStats = async (req, res) => {
+    const difficulty = req.body?.difficulty;
+
+    await UserStats.destroy({
+        where: difficulty === undefined
+            ? {userId: req.user.id}
+            : {
+                userId: req.user.id,
+                difficulty
+            }
+    })
+
+    res.sendStatus(200);
+}

@@ -31,7 +31,7 @@ app.use('/stats', StatsRouter);
 
 try {
     await sequelize.authenticate();
-    // await sequelize.sync({alter: true});
+    await sequelize.sync({alter: true});
 } catch (err) {
     console.error(err);
 
