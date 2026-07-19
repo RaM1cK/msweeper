@@ -2,7 +2,8 @@ import express from "express";
 import {
     auth,
     getRegisterPage,
-    register
+    register,
+    logout
 } from '../controllers/UserController.js'
 import TokenBucket from "../classes/TokenBucket.ts";
 import authMiddleware from "../controllers/authMiddleware.js";
@@ -24,5 +25,6 @@ const router = express.Router();
 router.use(slidingLimiter);
 router.post('/register', register);
 router.post('/auth', auth);
+router.post('/logout', logout);
 
 export default router;
