@@ -51,7 +51,16 @@ async function resetStats() {
     if (confirm(`Reset statistics for ${diffLabel}?`)) {
         const stats = await loadStats();
         delete stats[diffKey];
-        saveStats(stats);
+
+        fetch('http://localhost:3000/stats', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({difficulty: diffKey})
+        })
+            .catch(err => console.error(err));
+
         document.getElementById('statsModal').style.display = 'none';
     }
 }
@@ -59,7 +68,15 @@ async function resetStats() {
 function resetAllStats() {
     if (confirm('Reset all statistics?')) {
         stats = null;
-        saveStats({});
+
+        fetch('http://localhost:3000/stats', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .catch(err => console.error(err));
+
         document.getElementById('statsModal').style.display = 'none';
     }
 }

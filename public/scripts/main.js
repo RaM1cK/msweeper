@@ -35,3 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- Init Game --- */
     initGame(16, 16, 40);
 });
+
+async function logout() {
+    const res = await fetch('/user/logout', { method: 'POST' });
+    const data = await res.json();
+    window.location.href = data.redirect;
+}

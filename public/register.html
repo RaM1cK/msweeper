@@ -169,7 +169,7 @@
                     const data = await res.json();
 
                     if (res.ok) window.location.href = data.redirect;
-                    else setError('loginError', data.message);
+                    else setError('registerError', data.message);
                 })
                 .catch(() => setError('registerError', 'Registration failed'));
         });

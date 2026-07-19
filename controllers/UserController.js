@@ -50,6 +50,11 @@ export const register = async (req, res) => {
     res.status(200).json({redirect: '/'});
 }
 
+export const logout = (req, res) => {
+    res.clearCookie("token");
+    res.status(200).json({redirect: '/login'});
+}
+
 export const auth = async (req, res) => {
     const data = req.body;
 
